@@ -2,10 +2,7 @@
 name: Greeting on variable day
 
 on:
-  workflow_dispatch
-
-
-  
+ push
 
 jobs:
   greeting_job:
