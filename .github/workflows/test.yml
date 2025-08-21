@@ -5,6 +5,10 @@ on: [push]
 jobs:
   show-contexts:             # Job name
     runs-on: ubuntu-latest
+    env:
+      name: Pratibha
     steps:
       - name: show the Github Contexts
         run: echo "event by ${{github.actor}}" on the branch ${{github.ref}}
+      - name: Print variable
+        run: echo "$name"
