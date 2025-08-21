@@ -10,16 +10,16 @@ on:
 
 
 jobs:
-  greeting_job:
+  get-usename:
     runs-on: ubuntu-latest
-    
-    
+    outputs: 
+      name: ${{steps.get-name.outputs.name}}
     steps:
-      - name: "Step 1"
-        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
-        env:
-          First_Name: sandeep
-          DAY_OF_WEEK: sunday
-          Greeting: Hello
+      - id: get-name
       - name: "print variable"
-        run: echo "user is:${{github.event.inputs.username}}"
+        run: echo "user is:${{github.event.inputs.username}}" >> $GITHUB_OUTPUT
+
+  get-output:
+      runs-on: ubuntu-latest
+      steps:
+       - run: echo "name from previous job is ${{needs.get-username.outputs.username}}"
