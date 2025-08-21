@@ -1,1 +1,252 @@
-This is a test file- test4
+#sample for the sessions
+
+sudo -i
+sudo apt update -y
+apt install git -y
+git --version
+
+name: Demo Workflow   # Workflow name
+
+on: push              # Trigger (runs on push)
+
+jobs:
+  build:              # Job name
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3   # Step 1: Checkout code
+      - run: echo "Hello, GitHub Actions!"  # Step 2: Run command
+      
+      ---------------------------------------
+      
+      Triggr : Push 
+      
+name: Demo Workflow   # Workflow name
+
+on: 
+ push:             # Trigger (runs on push)
+  branches: 
+  - dev1
+  paths: 
+   - "application.txt"
+
+jobs:
+  build:              # Job name
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3   # Step 1: Checkout code
+      - run: echo "Hello, GitHub Actions!"  # Step 2: Run command
+      
+      ---------------------------
+      
+ Context and expression 
+ --------------------------------     
+name: Demo Workflow   # Workflow name
+
+on: [push]
+jobs:
+  show-contexts:             # Job name
+    runs-on: ubuntu-latest
+    steps:
+      - name: show the Github Contexts
+        run: echo "event by ${{github.actor}} on branch ${{github.ref}}"
+  
+  
+  ----------------------------------------------------------------      
+        
+name: Demo Workflow   # Workflow name
+
+on: [push]
+jobs:
+  show-contexts:             # Job name
+    runs-on: ubuntu-latest
+    steps:
+      - name: show the Github Contexts
+        run: echo "event by ${{github.actor}} on branch ${{github.ref}}"
+
+      - name: Run only on main branch
+        if: github.ref == 'refs/heads/dev'
+        run: echo "This is main branch code"
+        
+        
+        ------------------ Variable----
+        
+        name: Greeting on variable day
+
+on:
+  workflow_dispatch
+
+env:
+  DAY_OF_WEEK: Monday
+
+jobs:
+  greeting_job:
+    runs-on: ubuntu-latest
+    env:
+      Greeting: Hello
+    steps:
+      - name: "Say Hello Mona it's Monday"
+        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
+        env:
+          First_Name: Mona
+--------------------
+Input 
+---------------
+name: Input Workflow
+
+on:
+  workflow_dispatch:
+   inputs:
+    username:
+     description: "eneter your name"
+     required: true
+     default: "guset"
+
+
+jobs:
+  greeting_job:
+    runs-on: ubuntu-latest
+    
+    
+    steps:
+      - name: "Step 1"
+        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
+        env:
+          First_Name: sandeep
+          DAY_OF_WEEK: sunday
+          Greeting: Hello
+      - name: print usename
+        run: echo "$github.event.inputs.username"
+        
+        
+
+------        ------------------------------------------------------------------------
+
+name: Input Variables
+
+on:
+  workflow_dispatch:
+   inputs:
+    username:
+     description: "Enter user name"
+     required: true
+     default: "Guest"
+
+
+jobs:
+  greeting_job:
+    runs-on: ubuntu-latest   
+    
+    steps:
+      - name: "Step 1"
+        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
+        env:
+          First_Name: Priyanka
+          DAY_OF_WEEK: sunday
+          Greeting: Hello
+      - name: print username
+        run: echo "${{inputs.username}}">>GITHUB_OUTPUT
+
+  create_user:
+      runs-on: ubuntu-latest   
+
+      steps:
+        - name: test output
+          run: echo "User Names is ${{needs.greeting_job.outputs.GITHUB_OUTPUT}}"
+        
+    
+       
+       
+       -------------------
+       
+       name: Inputs and Outputs Lab
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: "Enter your name"
+        required: true
+        default: "Guest"
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    outputs:
+      final_greeting: ${{ steps.step1.outputs.greet_msg }}
+    steps:
+      - name: Save Greeting
+        id: step1
+        run: echo "greet_msg=Hello ${{ github.event.inputs.username }}" >> $GITHUB_OUTPUT
+
+      - name: Use Greeting in same job
+        run: echo "Final message in this job ${{steps.step1.outputs.greet_msg}}"
+
+  print_greeting:
+    runs-on: ubuntu-latest
+    needs: greet
+    steps:
+      - name: Print greeting from previous job
+        run: echo "Greeting from previous job is ${{ needs.greet.outputs.final_greeting }}"
+        
+        
+        +-------------------------------------------------  Tagging ----------------------
+        
+ name: Inputs and Outputs Lab
+on:
+  push:
+   tags:
+    - "v*"
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v3
+
+    - name: run my script
+      run: python hellomessage.py
+       
+       
+       ------------------
+       
+       Matrix-build
+       -----------------
+       
+name: Matrix Example 
+on:
+  push:
+  
+jobs:
+  Matrix-test:
+    runs-on: ubuntu-latest
+    strategy:
+     matrix:
+      python-version: [3.8,3.9]
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v3
+    - name: setup python
+      uses: actions/setup-python@v5
+      with:
+       python-version: ${{matrix.python-version}} 
+
+    - name: run my script
+      run: python hellomessage.py
+    
+    
+    
+---multiple os-----
+
+name: Matrix Example 
+on:
+  push:
+  
+jobs:
+  Matrix-test:
+    runs-on: ${{matrix.os}}
+    strategy:
+     matrix:
+      python-version: [3.8,3.9]
+      os: [ubuntu-latest,windows-latest]
+    steps:
