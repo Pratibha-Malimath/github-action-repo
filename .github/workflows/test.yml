@@ -1,17 +1,23 @@
-name: Demo Workflow   # Workflow name
 
-on: 
- push:             # Trigger (runs on push)
-  branches: 
-  - dev1
-  paths: 
-   - "application.txt"
+name: Greeting on variable day
+
+on:
+  workflow_dispatch
+
+
+  
 
 jobs:
-  build:              # Job name
-    runs-on: ubuntu-latest
+  greeting_job:
+    runs-on: self-hosted
+    timeout-minutes: 1
     
-
     steps:
-      - uses: actions/checkout@v3   # Step 1: Checkout code
-      - run: echo "Hello, GitHub Actions!"  # Step 2: Run command
+      - name: "Step 1"
+        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
+        env:
+          First_Name: sandeep
+          DAY_OF_WEEK: sunday
+          Greeting: Hello
+      - name: "Step 2"
+        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
