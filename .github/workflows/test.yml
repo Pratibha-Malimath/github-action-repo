@@ -1,14 +1,25 @@
+name: Greeting on variable day
 
-name: Demo Workflow   # Workflow name
+on:
+  workflow_dispatch:
+   inputs:
+    username:
+     description: "eneter your name"
+     required: true
+     default: "guset"
 
-on: [push]
+
 jobs:
-  show-contexts:             # Job name
+  greeting_job:
     runs-on: ubuntu-latest
-    env:
-      name: Pratibha
+    
+    
     steps:
-      - name: show the Github Contexts
-        run: echo "event by ${{github.actor}}" on the branch ${{github.ref}}
-      - name: Print variable
-        run: echo "$name"
+      - name: "Step 1"
+        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
+        env:
+          First_Name: sandeep
+          DAY_OF_WEEK: sunday
+          Greeting: Hello
+      - name: "Step 2"
+        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
