@@ -1,25 +1,25 @@
+
 name: Greeting on variable day
 
 on:
   workflow_dispatch:
-   inputs:
-    username:
-     description: "eneter your name"
-     required: true
-     default: "guset"
-
+    inputs:
+      username:
+        description: "Enter your name"
+        required: true
+        default: "guest"
 
 jobs:
-  get-usename:
+  get-username:
     runs-on: ubuntu-latest
-    outputs: 
-      name: ${{steps.get-name.outputs.name}}
+    outputs:
+      username: ${{ steps.get-name.outputs.username }}
     steps:
       - id: get-name
-      - name: "print variable"
-        run: echo "user is:${{github.event.inputs.username}}" >> $GITHUB_OUTPUT
+        run: echo "username=${{ github.event.inputs.username }}" >> $GITHUB_OUTPUT
 
   get-output:
-      runs-on: ubuntu-latest
-      steps:
-       - run: echo "name from previous job is ${{needs.get-username.outputs.username}}"
+    runs-on: ubuntu-latest
+    needs: get-username
+    steps:
+      - run: echo "Name from previous job is ${{ needs.get-username.outputs.username }}"
