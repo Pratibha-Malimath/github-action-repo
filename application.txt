@@ -312,3 +312,33 @@ jobs:
     - name: print the Production Enviroment message
       run: echo " deploying to the Production with API key = ${{secrets.API_KEY}}"
 
+Task 2: execution flow with PR 
+     
+name: Execution Flow with PR
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo " Building the application"
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - run: |
+          echo " Running tests"
+          exit 1   # Force fail for demo (remove this in real workflow)
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && success()
+    steps:
+      - run: echo " Deploying to Production (only on push to main and if tests passed)"
