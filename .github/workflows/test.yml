@@ -1,25 +1,19 @@
-name: Execution flow
-on:
-  push:
-  
+
+name: con-job 
+on: 
+ push:
+  branches:
+  - main
+
+
 jobs:
-  build:
-   runs-on: ubuntu-latest
-   steps:
-   - name: build job
-     run: echo "building the application"
-     
-  test:
-   runs-on: ubuntu-latest
-   needs: build
-   if: ${{success()}}
-   steps:
-   - name: test job
-     run: echo "testing  the application"
-     
-  deploy:
-   runs-on: ubuntu-latest
-   needs: test
-   steps:
-   - name: deploy job
-     run: echo "deploy the application"
+  get-api-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout the code 
+        uses: actions/checkout@v3
+      - name: print message
+        run: |
+         echo "hello sandeep"   
+         sleep 20
+         echo "this is final message"
